@@ -11,7 +11,7 @@ unsigned long lastUpdate = 0;
 
 void setup() {
     Serial.begin(115200);
-
+delay(1000);
     camera.begin(WIFI_SSID, WIFI_PASS);
 }
 

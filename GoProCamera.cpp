@@ -5,6 +5,15 @@
 static const char* GOPRO_IP = "http://10.5.5.9";
 
 bool GoProCamera::begin(const char* ssid, const char* pass) {
+
+    
+  WiFi.useStaticBuffers(true);   // gut für den kleinen RAM
+  WiFi.mode(WIFI_STA);
+  
+  // Optional: etwas aggressiveres Verbinden
+  WiFi.setTxPower(WIFI_POWER_8_5dBm); // spart Strom, oft stabiler
+  
+    
     WiFi.begin(ssid, pass);
 
     unsigned long t = millis();
