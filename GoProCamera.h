@@ -15,6 +15,7 @@ public:
     bool isRecording();
     String getCameraName();
     int getRemainingTime();
+    int getVideoRecordet();
     String getRawStatus();
 
 private:

@@ -13,7 +13,8 @@ bool GoProCamera::begin(const char* ssid, const char* pass) {
   // Optional: etwas aggressiveres Verbinden
   WiFi.setTxPower(WIFI_POWER_8_5dBm); // spart Strom, oft stabiler
   
-    
+    Serial.println("---- GOPRO connect ----");
+
     WiFi.begin(ssid, pass);
 
     unsigned long t = millis();
@@ -66,7 +67,7 @@ bool GoProCamera::takePhoto() {
 }
 
 int GoProCamera::getBatteryPercent() {
-    return _doc["status"]["23"] | -1;
+    return _doc["status"]["70"] | -1;
 }
 
 bool GoProCamera::isRecording() {
@@ -78,9 +79,12 @@ String GoProCamera::getCameraName() {
 }
 
 int GoProCamera::getRemainingTime() {
+   
+    return _doc["status"]["35"].as<int>() / 60;
+}
+int GoProCamera::getVideoRecordet() {
     return _doc["status"]["37"] | -1;
 }
-
 String GoProCamera::getRawStatus() {
     return _raw;
 }
