@@ -4,19 +4,27 @@ void CommandParser::handle(GoProCamera camera, String cmd) {
 
     cmd.trim();
 
-    if (cmd == "REC=REC_ON") {
+
+    if (cmd == "option=0&setting=0") {
+        Serial.println(camera.keepAlive());
+     }
+      else if (cmd == "option=1&setting=0") {
+         Serial.println(camera.update());
+    }
+     else if (cmd == "option=1&setting=8") {
         Serial.println("START_RECORD");
         camera.startRecording();
     }
-    else if (cmd == "REC=REC_OFF") {
+    else if (cmd == "option=0&setting=8") {
         Serial.println("STOP_RECORD");
         camera.stopRecording();
     }
-    else if (cmd == "REC=PHOTO") {
+    else if (cmd == "option=2&setting=8") {
         Serial.println("TAKE_PHOTO");
         camera.takePhoto();
     }
-    else if (cmd == "REC=IDLE") {
-        Serial.println("IDLE");
+    else {
+       Serial.println(cmd);
+      Serial.println( camera.setOptions(cmd));
     }
 }

@@ -5,11 +5,14 @@
 class GoProCamera {
 public:
     bool begin(const char* ssid, const char* pass);
-    bool update();
+    String wifiStatus();
 
-    bool startRecording();
-    bool stopRecording();
+    String update();
+    String keepAlive();
+    String startRecording();
+    String stopRecording();
     bool takePhoto();
+    String setOptions(const String& setting);
 
     int getBatteryPercent();
     bool isRecording();

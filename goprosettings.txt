@@ -1,0 +1,4 @@
+Frames Per Second (3)
+Hypersmooth (135)
+Video Lens (121)
+Video Resolution (2)

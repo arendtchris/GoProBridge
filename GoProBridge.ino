@@ -10,12 +10,8 @@ CommandParser parser;
 HardwareSerial fcSerial(0);        // UART0 ESP32-C3
 const int baudRate = 115200;
 
-// Empfangspuffer
-char rxBuffer[150];
-uint8_t rxIndex = 0;
-
 unsigned long lastUpdate = 0;
-
+String input = "";
 void setup() {
     Serial.begin(115200);
     fcSerial.begin(baudRate, SERIAL_8N1, 20, 21);
@@ -27,28 +23,20 @@ void loop() {
 
     if (millis() - lastUpdate > 1000) {
         lastUpdate = millis();
-
-
-        //camera.startRecording();
-        //delay(10000);
-        //camera.stopRecording();
-
-
-        if (camera.update()) {
-
-            Serial.println("---- GOPRO STATUS ----");
-            Serial.println("Battery: " + String(camera.getBatteryPercent()));
-            Serial.println("VideoRecordet: " + String(camera.getVideoRecordet()));
-            Serial.println("RemainingTime: " + String(camera.getRemainingTime()));
-            Serial.println("Recording: " + String(camera.isRecording()));
-            Serial.println("Camera: " + camera.getCameraName());
-            Serial.println("----------------------");
-        }
+        //Serial.println(camera.keepAlive());
+        Serial.println(camera.wifiStatus());
+        Serial.println(camera.update());
+        
+        fcSerial.println(camera.update());
     }
 
     if (fcSerial.available()) {
         String cmd = fcSerial.readStringUntil('\n');
-        
-        parser.handle( camera, cmd);
+       // parser.handle( camera, cmd);
+    }
+
+   if (Serial.available()) {
+        String cmd = Serial.readStringUntil('\n');
+       parser.handle( camera, cmd);
     }
 }
