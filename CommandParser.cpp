@@ -6,7 +6,7 @@ void CommandParser::handle(GoProCamera camera, String cmd) {
 
 
     if (cmd == "option=0&setting=0") {
-        Serial.println(camera.keepAlive());
+        camera.begin();
      }
       else if (cmd == "option=1&setting=0") {
          Serial.println(camera.update());
