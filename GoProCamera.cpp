@@ -2,23 +2,22 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-GoProCamera::GoProCamera(const char* ssid,
-                         const char* pass,
-                         const char* ip)
-  : _ssid(ssid),
-    _pass(pass),
-    _goproIP(ip),
+GoProCamera::GoProCamera(const char* ip)
+  : _goproIP(ip),
     _raw("")
-
 {
-
 }
 
-bool GoProCamera::begin() {
+bool GoProCamera::begin(const char* ssid, const char* pass) {
 
-  Serial.println("---- GOPRO connect ----");
+  if (WiFi.status() == WL_CONNECTED)
+    {
+       return true;
+    } 
+    
+  Serial.println("Camera offline try to connect");
 
-  WiFi.begin(_ssid, _pass);
+  WiFi.begin(ssid, pass);
 
   unsigned long t = millis();
 
@@ -34,6 +33,7 @@ bool GoProCamera::begin() {
   }
 
   Serial.println("WiFi connected");
+  
   return true;
 }
 
@@ -92,7 +92,7 @@ String GoProCamera::update() {
     return "";
 
   deserializeJson(_doc, _raw);
-_raw.replace("\n", "");
+  _raw.replace("\n", "");
   return _raw;
 }
 
@@ -112,8 +112,9 @@ String GoProCamera::stopRecording() {
   return httpGET(String(_goproIP) + "/gp/gpControl/command/shutter?p=0");
 }
 
-String GoProCamera::setOptions(const String& setting) {
-  return httpGET(String(_goproIP) + "/gopro/camera/setting?" + setting);
+String GoProCamera::setOptions(const int setting, const int option) {
+  Serial.println(String(_goproIP) + "/gopro/camera/setting?option=" + option + "&setting=" + setting);
+  return httpGET(String(_goproIP) + "/gopro/camera/setting?option=" + option + "&setting=" + setting);
 }
 
 bool GoProCamera::takePhoto() {

@@ -11,7 +11,7 @@ HardwareSerial fcSerial(0);        // UART0 ESP32-C3
 const int baudRate = 115200;
 unsigned long lastUpdate = 0;
 String input = "";
-GoProCamera camera(WIFI_SSID, WIFI_PASS, "http://10.5.5.9:8080");
+GoProCamera camera( "http://10.5.5.9:8080");
 
 
 
@@ -22,10 +22,6 @@ void setup() {
   WiFi.useStaticBuffers(true);
   WiFi.mode(WIFI_STA);
   WiFi.setTxPower(WIFI_POWER_8_5dBm);
-
-  if (camera.begin()) {
-    camera.autoPowerDown();
-  }
 }
 
 void loop() {
@@ -37,26 +33,22 @@ void loop() {
 
     if (WiFi.status() != WL_CONNECTED)
     {
-      Serial.println("Camera offline");
-      return;
+      //Serial.println("Camera offline");
+      String json  = R"JSON({"status":{"1":0}})JSON";
 
+    } else {
+      String json = camera.update();
+      fcSerial.println(json);
     }
 
-    String json = camera.update();
-    //json.replace("\r", "");
-    json.replace("\n", "");
-    //Serial.println(json);
 
-    fcSerial.println(json);
   }
 
   if (fcSerial.available()) {
     String cmd = fcSerial.readStringUntil('\n');
+    Serial.println(cmd);
     parser.handle( camera, cmd);
   }
 
-  if (Serial.available()) {
-    String cmd = Serial.readStringUntil('\n');
-    parser.handle( camera, cmd);
-  }
+
 }

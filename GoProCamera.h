@@ -5,11 +5,9 @@
 
 class GoProCamera {
 public:
-    GoProCamera(const char* ssid,
-                const char* pass,
-                const char* ip = "http://10.5.5.9:8080");
+    GoProCamera(const char* ip = "http://10.5.5.9:8080");
 
-    bool begin();
+    bool begin(const char* ssid, const char* pass);
 
     String wifiStatus();
 
@@ -21,7 +19,7 @@ public:
     String stopRecording();
     bool takePhoto();
 
-    String setOptions(const String& setting);
+    String setOptions(const int setting, const int option);
 
     int getBatteryPercent();
     bool isRecording();
